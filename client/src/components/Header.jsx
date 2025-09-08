@@ -1,6 +1,10 @@
 import { Button } from "@/components/ui/button";
+import { useTheme } from "@/contexts/ThemeContext";
+import NotificationsDropdown from "@/components/NotificationsDropdown";
 
 export default function Header({ title, subtitle }) {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <header className="bg-card border-b border-border px-6 py-4">
       <div className="flex items-center justify-between">
@@ -14,25 +18,16 @@ export default function Header({ title, subtitle }) {
         </div>
         <div className="flex items-center space-x-4">
           {/* Notification Bell */}
-          <Button 
-            variant="ghost" 
-            size="icon"
-            className="relative"
-            data-testid="button-notifications"
-          >
-            <i className="fas fa-bell text-lg"></i>
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center">
-              3
-            </span>
-          </Button>
+          <NotificationsDropdown />
           
           {/* Theme Toggle */}
           <Button 
             variant="ghost" 
             size="icon"
+            onClick={toggleTheme}
             data-testid="button-theme-toggle"
           >
-            <i className="fas fa-moon text-lg"></i>
+            <i className={`fas ${theme === 'light' ? 'fa-moon' : 'fa-sun'} text-lg`}></i>
           </Button>
         </div>
       </div>
