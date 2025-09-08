@@ -43,13 +43,18 @@ export default function Quizzes() {
   const submitAttemptMutation = useMutation({
     mutationFn: api.submitQuizAttempt,
     onSuccess: (data) => {
+      console.log("Quiz submission response:", data); // Debug log
       queryClient.invalidateQueries({ queryKey: ["/api/quiz-attempts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/progress"] });
       
-      const scorePercentage = Math.round((data.score / data.totalQuestions) * 100);
+      // Ensure score and totalQuestions are valid numbers
+      const score = data.score || 0;
+      const totalQuestions = data.totalQuestions || 1;
+      const scorePercentage = Math.round((score / totalQuestions) * 100);
+      
       toast({
         title: "Quiz Completed!",
-        description: `You scored ${data.score}/${data.totalQuestions} (${scorePercentage}%)`,
+        description: `You scored ${score}/${totalQuestions} (${scorePercentage}%)`,
       });
       
       setActiveQuiz(null);

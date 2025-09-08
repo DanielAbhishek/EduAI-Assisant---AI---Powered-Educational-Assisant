@@ -57,21 +57,30 @@ export default function QuizInterface({ quiz, onComplete }) {
   };
 
   const handleQuizComplete = () => {
+    // Save current answer if one is selected
+    let finalAnswers = { ...answers };
+    if (selectedAnswer !== "" && currentQuestion < totalQuestions) {
+      finalAnswers[currentQuestion] = parseInt(selectedAnswer);
+    }
+
+    // Calculate score
     let score = 0;
     questions.forEach((question, index) => {
-      if (answers[index] === question.correctAnswer) {
+      const userAnswer = finalAnswers[index];
+      if (userAnswer !== undefined && userAnswer === question.correctAnswer) {
         score++;
       }
     });
 
     const attempt = {
       quizId: quiz.id,
-      answers: answers,
+      answers: finalAnswers,
       score: score,
       totalQuestions: totalQuestions,
       timeSpent: (quiz.timeLimit * 60) - timeLeft,
     };
 
+    console.log("Quiz completion data:", attempt); // Debug log
     onComplete(attempt);
   };
 
