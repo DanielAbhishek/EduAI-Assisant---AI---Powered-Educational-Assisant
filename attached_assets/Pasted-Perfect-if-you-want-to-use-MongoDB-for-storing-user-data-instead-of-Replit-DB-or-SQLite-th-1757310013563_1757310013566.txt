@@ -1,0 +1,150 @@
+Perfect 👍 if you want to use **MongoDB** for storing user data (instead of Replit DB or SQLite), that’s a solid choice because it’s flexible for handling different data types like essays, quiz results, and progress logs. Let me give you:
+
+1. **Updated tech stack (with MongoDB).**
+2. **Detailed file/folder structure.**
+3. **A refined Replit Ghostwriter prompt** that scaffolds the full project with MongoDB integration.
+
+---
+
+# 🛠️ Updated Tools & Technologies
+
+### **Backend (FastAPI + MongoDB)**
+
+* **FastAPI** → REST API server.
+* **MongoDB Atlas (Cloud)** or local MongoDB (via `pymongo` or `motor` for async).
+* **Data Models:**
+
+  * `User` (students/teachers)
+  * `Essay` (text + feedback + scores)
+  * `Quiz` (questions, attempts, difficulty level)
+  * `Progress` (student performance over time)
+
+### **AI / ML Layer**
+
+* **NLP for feedback** → HuggingFace transformers / OpenAI API.
+* **Reinforcement learning** → adjust quiz difficulty based on performance logs stored in MongoDB.
+* **Recommendation engine** → query MongoDB for similar learners/resources.
+
+### **Frontend (React + TailwindCSS)**
+
+* **Student Dashboard:** Essays, quizzes, recommendations, progress charts.
+* **Teacher Dashboard:** Class reports, grading insights, visual analytics.
+* **Data Fetching:** React Query or Axios → connect to FastAPI endpoints.
+
+---
+
+# 📂 Suggested File/Folder Structure
+
+```
+/ai-edu-assistant
+│── backend/
+│   ├── main.py                # FastAPI entry point
+│   ├── auth.py                # JWT authentication
+│   ├── database.py            # MongoDB connection
+│   ├── models/                # Pydantic models
+│   │   ├── user.py
+│   │   ├── essay.py
+│   │   ├── quiz.py
+│   │   └── progress.py
+│   ├── routes/                # API routes
+│   │   ├── auth_routes.py
+│   │   ├── student_routes.py
+│   │   ├── teacher_routes.py
+│   │   └── ai_routes.py
+│   ├── services/              # Business logic
+│   │   ├── nlp_feedback.py
+│   │   ├── quiz_engine.py
+│   │   └── recommender.py
+│   └── utils/                 # Helper functions
+│
+│── frontend/
+│   ├── src/
+│   │   ├── components/        # UI components
+│   │   ├── pages/             # Student + Teacher dashboards
+│   │   ├── services/          # API calls
+│   │   └── App.jsx
+│   ├── tailwind.config.js
+│   └── package.json
+│
+│── README.md
+│── requirements.txt           # Python dependencies
+│── .replit                    # Replit config
+```
+
+---
+
+# ⚡ Replit Ghostwriter Prompt
+
+Paste this into Replit Ghostwriter:
+
+---
+
+**Prompt:**
+
+*"Build a full-stack AI-powered educational assistant using FastAPI (Python backend), MongoDB, and React (frontend with TailwindCSS). The project should include:*
+
+### **1. Authentication System**
+
+* JWT-based login/signup for students and teachers.
+* Role-based dashboards (student vs teacher).
+* MongoDB `users` collection stores: `{ name, email, role, password_hash, progress_ids }`.
+
+### **2. Student Features**
+
+* Essay submission → AI/NLP feedback (use HuggingFace/OpenAI API).
+* Grammar correction + scoring stored in MongoDB `essays` collection.
+* Adaptive quiz system:
+
+  * Uses reinforcement learning to adjust difficulty.
+  * Stores attempts in MongoDB `quizzes` collection.
+* Personalized recommendations:
+
+  * Hybrid engine → content-based + collaborative filtering.
+  * Resources stored in `resources` collection.
+* Progress tracking → Recharts frontend, backed by MongoDB `progress` collection.
+
+### **3. Teacher Features**
+
+* Dashboard showing student progress reports.
+* Automated grading insights.
+* Class-level analytics (charts, performance heatmaps).
+
+### **4. Backend (FastAPI)**
+
+* Routes organized in `/routes` folder.
+* Async MongoDB connection using `motor`.
+* Pydantic models for user, essay, quiz, progress.
+* JWT authentication in `auth.py`.
+* AI services in `/services` (nlp\_feedback.py, quiz\_engine.py, recommender.py).
+
+### **5. Frontend (React + Tailwind)**
+
+* Pages:
+
+  * Student Dashboard → Essays, Quizzes, Recommendations, Progress.
+  * Teacher Dashboard → Student reports, class analytics.
+* Components:
+
+  * `EssayForm`, `QuizModule`, `ProgressChart`, `ClassAnalytics`.
+* API integration via Axios/React Query.
+
+### **6. Database (MongoDB)**
+
+* `users` → student/teacher info.
+* `essays` → submissions + AI feedback.
+* `quizzes` → questions + attempts + difficulty.
+* `progress` → performance history.
+* `resources` → learning materials.
+
+### **7. Code Organization**
+
+* `/backend` → FastAPI server with routes, services, and DB connection.
+* `/frontend` → React app with Tailwind styling.
+* Use modular, clean code with comments.
+* Create dummy seed data for testing dashboards.
+
+*Make sure the system runs inside Replit, with backend + frontend in one workspace, and MongoDB connected via Atlas. Include example API calls and dummy responses so the UI can demo features even if AI APIs are not yet fully integrated."*
+
+---
+
+👉 Do you want me to **write the starter code for MongoDB integration in FastAPI (database.py + sample route)** so you can plug it into Replit immediately, or keep it at the scaffold prompt level?
