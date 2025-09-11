@@ -176,7 +176,7 @@ export default function Dashboard() {
             <Card>
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold text-foreground mb-4">Quick Actions</h3>
-                <div className="space-y-5">
+                <div className="space-y-8">
                   <Link href="/essays">
                     <Button 
                       className="w-full justify-between bg-primary text-primary-foreground hover:bg-primary/90"
