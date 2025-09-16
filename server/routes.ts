@@ -3,56 +3,55 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertEssaySchema, insertQuizAttemptSchema } from "@shared/schema";
+import { handleRouteError, asyncHandler, NotFoundError } from "./utils/errorHandler";
+import { moderateRateLimit, strictRateLimit } from "./middleware/rateLimiter";
 import { ZodError } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
+  // Apply rate limiting to all API routes
+  app.use('/api', moderateRateLimit);
+  
+  // Stricter rate limiting for write operations only
+  app.post('/api/essays', strictRateLimit);
+  app.post('/api/quiz-attempts', strictRateLimit);
+  app.post('/api/init-data', strictRateLimit);
+
   // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
+  app.get('/api/auth/user', isAuthenticated, asyncHandler(async (req: any, res) => {
+    const userId = req.user.claims.sub;
+    const user = await storage.getUser(userId);
+    if (!user) {
+      throw new NotFoundError("User");
     }
-  });
+    res.json(user);
+  }));
 
   // Essay routes
-  app.post('/api/essays', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const essayData = insertEssaySchema.parse({ ...req.body, userId });
-      
-      // Calculate word count
-      const wordCount = essayData.content.trim().split(/\s+/).filter(word => word.length > 0).length;
-      essayData.wordCount = wordCount;
-      
-      // Simulate AI analysis (replace with actual AI service)
-      const aiAnalysis = await analyzeEssay(essayData.content);
-      
-      const essay = await storage.createEssay({
-        ...essayData,
-        ...aiAnalysis,
-        status: "graded"
-      });
+  app.post('/api/essays', isAuthenticated, asyncHandler(async (req: any, res) => {
+    const userId = req.user.claims.sub;
+    const essayData = insertEssaySchema.parse({ ...req.body, userId });
+    
+    // Calculate word count
+    const wordCount = essayData.content.trim().split(/\s+/).filter(word => word.length > 0).length;
+    essayData.wordCount = wordCount;
+    
+    // Simulate AI analysis (replace with actual AI service)
+    const aiAnalysis = await analyzeEssay(essayData.content);
+    
+    const essay = await storage.createEssay({
+      ...essayData,
+      ...aiAnalysis,
+      status: "graded"
+    });
 
-      // Update progress
-      await storage.updateProgress(userId, "writing", aiAnalysis.overallScore);
-      
-      res.json(essay);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        res.status(400).json({ message: "Invalid essay data", errors: error.errors });
-      } else {
-        console.error("Error creating essay:", error);
-        res.status(500).json({ message: "Failed to submit essay" });
-      }
-    }
-  });
+    // Update progress
+    await storage.updateProgress(userId, "writing", aiAnalysis.overallScore);
+    
+    res.json(essay);
+  }));
 
   app.get('/api/essays', isAuthenticated, async (req: any, res) => {
     try {
@@ -185,15 +184,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Initialize sample data
-  app.post('/api/init-data', async (req, res) => {
-    try {
-      await initializeSampleData();
-      res.json({ message: "Sample data initialized" });
-    } catch (error) {
-      console.error("Error initializing data:", error);
-      res.status(500).json({ message: "Failed to initialize data" });
+  // Development-only route for sample data initialization
+  app.post('/api/init-data', asyncHandler(async (req: any, res) => {
+    // Security: Only allow in development environment
+    if (process.env.NODE_ENV === 'production') {
+      res.status(403).json({ message: "Not available in production" });
+      return;
     }
-  });
+    
+    await initializeSampleData();
+    res.json({ message: "Sample data initialized" });
+  }));
 
   const httpServer = createServer(app);
   return httpServer;

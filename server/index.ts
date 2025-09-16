@@ -39,17 +39,17 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-
-    // Only send response if headers haven't been sent yet
-    if (!res.headersSent) {
-      res.status(status).json({ message });
-    }
+  app.use(async (err: any, _req: Request, res: Response, _next: NextFunction) => {
+    // Import handleRouteError using dynamic import for ES modules
+    const { handleRouteError } = await import('./utils/errorHandler.js');
     
-    // Log the error but don't throw it to prevent crashes
-    console.error('Server error:', err);
+    // Only handle response if headers haven't been sent yet
+    if (!res.headersSent) {
+      handleRouteError(err, res, 'server');
+    } else {
+      // Log the error if we can't send a response
+      console.error('Server error (headers already sent):', err);
+    }
   });
 
   // importantly only setup vite in development and after
