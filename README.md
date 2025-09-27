@@ -1,8 +1,5 @@
 # 🎓 EduAI Assistant – AI-Powered Educational Companion
 
-![EduAI Banner]
-
----
 
 ## 🚀 Features
 
@@ -12,9 +9,6 @@
 ⏱️ **Productivity Tracking** – Insights to maximize efficiency.  
 🌐 **Multi-Platform Support** – Web & Mobile ready.
 
-![Feature Demo](https://media.giphy.com/media/26xBukhB6XcF1bG8g/giphy.gif)
-
----
 
 ## 🛠️ Technologies Used
 
@@ -40,3 +34,24 @@ git clone https://github.com/DanielAbhishek/EduAI-Assisant---AI---Powered-Educat
 cd EduAI-Assisant
 npm install
 npm run dev
+
+🎬 Demo
+
+📢 Acknowledgements
+
+OpenAI GPT-3.5 🤖 – AI intelligence
+
+React.js ⚛️ – UI development
+
+Tailwind CSS 🎨 – Styling
+
+MongoDB 🍃 – Database
+
+📞 Contact
+
+S4F_CP_TEAM_36786 ✉️
+
+✨ ASCII Separator
+╔══════════════════════════════════╗
+║        EduAI Assistant           ║
+╚══════════════════════════════════╝
