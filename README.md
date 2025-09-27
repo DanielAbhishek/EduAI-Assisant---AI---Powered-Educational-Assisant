@@ -1,7 +1,6 @@
 # 🎓 EduAI Assistant – AI-Powered Educational Companion
 
-![EduAI Banner](https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif)  
-*Learning meets AI – smarter, faster, better!*  
+![EduAI Banner]
 
 ---
 
